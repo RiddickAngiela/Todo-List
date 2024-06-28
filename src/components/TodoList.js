@@ -14,6 +14,7 @@ import { fireApp } from "../firebaseConfig";
 
 const TodoList = () => {
   const [newTodo, setNewTodo] = useState("");
+  const [newTitle, setNewTitle] = useState("");
   const [todos, setTodos] = useState([]);
 
   const db = getFirestore(fireApp);
@@ -33,14 +34,16 @@ const TodoList = () => {
 
   const handleAddTodo = async () => {
     try {
-      if (newTodo.trim() !== "") {
+      if (newTodo.trim() !== "" && newTitle.trim() !== "") {
         const docRef = await addDoc(todosRef, {
+          title: newTitle,
           text: newTodo,
           completed: false,
           createdAt: new Date(),
         });
         console.log("Document written with ID: ", docRef.id);
         setNewTodo("");
+        setNewTitle("");
       }
     } catch (error) {
       console.error("Error adding document: ", error);
@@ -76,6 +79,13 @@ const TodoList = () => {
     <div className="todo-container">
       <input
         type="text"
+        className="todo-title-input"
+        value={newTitle}
+        onChange={(e) => setNewTitle(e.target.value)}
+        placeholder="Title"
+      />
+      <input
+        type="text"
         className="todo-input"
         value={newTodo}
         onChange={(e) => setNewTodo(e.target.value)}
@@ -90,7 +100,9 @@ const TodoList = () => {
             key={todo.id}
             className={`todo-item ${todo.completed ? "completed" : ""}`}
           >
+            <h3>{todo.title}</h3>
             <span>{todo.text}</span>
+            <small>{new Date(todo.createdAt.toDate()).toLocaleString()}</small>
             <div className="todo-buttons">
               <button
                 className="complete-button"
