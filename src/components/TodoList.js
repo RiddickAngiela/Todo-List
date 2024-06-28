@@ -1,71 +1,98 @@
-// src/components/TodoList.js
-import React, { useState, useEffect } from "react";
-import "./TodoList.css";
-
+import { useState, useEffect } from "react";
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  query,
+  onSnapshot,
+  doc,
+} from "firebase/firestore";
+import { fireApp } from "../firebaseConfig";
 
 const TodoList = () => {
-  const [todos, setTodos] = useState([]);
   const [newTodo, setNewTodo] = useState("");
+  const [todos, setTodos] = useState([]);
+
+  const db = getFirestore(fireApp);
+  const todosRef = collection(db, "todos");
 
   useEffect(() => {
-    const savedTodos = JSON.parse(localStorage.getItem("todos")) || [];
-    setTodos(savedTodos);
-  }, []);
+    const unsubscribe = onSnapshot(query(todosRef), (snapshot) => {
+      const updatedTodos = [];
+      snapshot.forEach((doc) => {
+        updatedTodos.push({ id: doc.id, ...doc.data() });
+      });
+      setTodos(updatedTodos);
+    });
 
-  useEffect(() => {
-    localStorage.setItem("todos", JSON.stringify(todos));
-  }, [todos]);
+    return () => unsubscribe();
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const addTodo = () => {
-    if (newTodo.trim() === "") return;
-    const todo = {
-      id: Date.now(),
-      title: newTodo,
-      completed: false,
-      timestamp: new Date().toLocaleString(),
-    };
-    setTodos([...todos, todo]);
-    setNewTodo("");
+  const handleAddTodo = async () => {
+    try {
+      if (newTodo.trim() !== "") {
+        const docRef = await addDoc(todosRef, {
+          text: newTodo,
+          completed: false,
+          createdAt: new Date(),
+        });
+        console.log("Document written with ID: ", docRef.id);
+        setNewTodo("");
+      }
+    } catch (error) {
+      console.error("Error adding document: ", error);
+    }
   };
 
-  const toggleComplete = (id) => {
-    setTodos(
-      todos.map((todo) =>
-        todo.id === id ? { ...todo, completed: !todo.completed } : todo
-      )
-    );
+  const handleToggleComplete = async (id, completed) => {
+    try {
+      const todoRef = doc(db, "todos", id);
+      await updateDoc(todoRef, {
+        completed: !completed,
+      });
+      console.log("Document updated with ID: ", id);
+    } catch (error) {
+      console.error("Error updating document: ", error);
+    }
   };
 
-  const deleteTodo = (id) => {
-    setTodos(todos.filter((todo) => todo.id !== id));
+  const handleDeleteTodo = async (id) => {
+    try {
+      const todoRef = doc(db, "todos", id);
+      await deleteDoc(todoRef);
+      console.log("Document deleted with ID: ", id);
+
+      // Update local state to reflect deletion
+      setTodos(todos.filter((todo) => todo.id !== id));
+    } catch (error) {
+      console.error("Error deleting document: ", error);
+    }
   };
 
   return (
-    <div className="todo-container">
-      <h1 className="todo-title">Riddick To-Do List</h1>
+    <div>
       <input
         type="text"
-        className="todo-input"
         value={newTodo}
         onChange={(e) => setNewTodo(e.target.value)}
-        placeholder="Add a new to-do"
+        placeholder="Add a new todo"
       />
-      <button className="todo-button" onClick={addTodo}>
-        Add
-      </button>
-      <ul className="todo-list">
+      <button onClick={handleAddTodo}>Add Todo</button>
+      <ul>
         {todos.map((todo) => (
           <li
             key={todo.id}
-            className={`todo-item ${todo.completed ? "completed" : ""}`}
+            style={{ textDecoration: todo.completed ? "line-through" : "none" }}
           >
-            {todo.title} - {todo.timestamp}
-            <div className="todo-item-buttons">
-              <button onClick={() => toggleComplete(todo.id)}>
-                {todo.completed ? "Undo" : "Complete"}
-              </button>
-              <button onClick={() => deleteTodo(todo.id)}>Delete</button>
-            </div>
+            {todo.text}
+            <button
+              onClick={() => handleToggleComplete(todo.id, todo.completed)}
+            >
+              {todo.completed ? "Mark Incomplete" : "Mark Complete"}
+            </button>
+            <button onClick={() => handleDeleteTodo(todo.id)}>Delete</button>
           </li>
         ))}
       </ul>
