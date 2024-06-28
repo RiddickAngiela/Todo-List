@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import "./TodoList.css";
 import {
   getFirestore,
   collection,
@@ -72,27 +73,38 @@ const TodoList = () => {
   };
 
   return (
-    <div>
+    <div className="todo-container">
       <input
         type="text"
+        className="todo-input"
         value={newTodo}
         onChange={(e) => setNewTodo(e.target.value)}
         placeholder="Add a new todo"
       />
-      <button onClick={handleAddTodo}>Add Todo</button>
-      <ul>
+      <button className="add-button" onClick={handleAddTodo}>
+        Add Todo
+      </button>
+      <ul className="todo-list">
         {todos.map((todo) => (
           <li
             key={todo.id}
-            style={{ textDecoration: todo.completed ? "line-through" : "none" }}
+            className={`todo-item ${todo.completed ? "completed" : ""}`}
           >
-            {todo.text}
-            <button
-              onClick={() => handleToggleComplete(todo.id, todo.completed)}
-            >
-              {todo.completed ? "Mark Incomplete" : "Mark Complete"}
-            </button>
-            <button onClick={() => handleDeleteTodo(todo.id)}>Delete</button>
+            <span>{todo.text}</span>
+            <div className="todo-buttons">
+              <button
+                className="complete-button"
+                onClick={() => handleToggleComplete(todo.id, todo.completed)}
+              >
+                {todo.completed ? "Mark Incomplete" : "Mark Complete"}
+              </button>
+              <button
+                className="delete-button"
+                onClick={() => handleDeleteTodo(todo.id)}
+              >
+                Delete
+              </button>
+            </div>
           </li>
         ))}
       </ul>
