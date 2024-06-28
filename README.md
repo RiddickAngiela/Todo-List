@@ -1,6 +1,6 @@
 # To-Do List Application
 
-This is a simple to-do list application built using ReactJS. The application allows users to add new to-do items, mark them as complete, and delete them. The list of to-do items is persistently stored in the browser's local storage, so it remains available even after the application is closed and reopened.
+This is a simple to-do list application built using ReactJS and firebase in the backend. The application allows users to add new to-do items, mark them as complete, and delete them. The list of to-do items is persistently stored in the browser's local storage, so it remains available even after the application is closed and reopened.
 
 ## Features
 
@@ -15,5 +15,6 @@ This is a simple to-do list application built using ReactJS. The application all
 1. Clone the repository:
 
 ```bash
+git clone git@github.com:RiddickAngiela/Todo-List.git
 cd todo-app
 run npm start.
