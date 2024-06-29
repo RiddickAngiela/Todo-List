@@ -2,41 +2,49 @@
 
 .todo-container {
     width: 400px;
-    margin: 0 auto;
+    margin: 20px auto;
     padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    background-color: #f9f9f9;
+    border: 2px solid #4CAF50;
+    border-radius: 12px;
+    background: #f0f0f0;
+    /* fallback for older browsers */
+    background: linear-gradient(to bottom, #ffffff, #f0f0f0);
+    background-size: cover;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .todo-title-input,
 .todo-input {
     width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    padding: 12px;
+    margin-bottom: 12px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
     box-sizing: border-box;
+    font-size: 16px;
+    background-color: #fefefe;
 }
 
 .add-button {
     width: 100%;
-    padding: 10px;
-    background-color: #28a745;
+    padding: 12px;
+    background-color: #4CAF50;
     color: #fff;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 18px;
+    transition: background-color 0.3s;
 }
 
 .add-button:hover {
-    background-color: #218838;
+    background-color: #45a049;
 }
 
 .todo-list {
     list-style: none;
     padding: 0;
+    margin-top: 20px;
 }
 
 .todo-item {
@@ -44,39 +52,49 @@
     flex-direction: column;
     background-color: #fff;
     padding: 15px;
-    margin-bottom: 10px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    margin-bottom: 12px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.todo-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .todo-item h3 {
     margin: 0;
-    font-size: 18px;
+    font-size: 20px;
+    color: #333;
 }
 
 .todo-item span {
-    margin: 5px 0;
+    margin: 8px 0;
+    font-size: 16px;
+    color: #555;
 }
 
 .todo-item small {
-    color: #888;
+    color: #999;
     font-size: 12px;
-    margin-top: 5px;
+    margin-top: 8px;
 }
 
 .todo-buttons {
     display: flex;
     justify-content: space-between;
-    margin-top: 10px;
+    margin-top: 15px;
 }
 
 .complete-button,
 .delete-button {
-    padding: 5px 10px;
+    padding: 8px 12px;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
     cursor: pointer;
     font-size: 14px;
+    transition: background-color 0.3s;
 }
 
 .complete-button {
@@ -85,7 +103,7 @@
 }
 
 .complete-button:hover {
-    background-color: #0069d9;
+    background-color: #0056b3;
 }
 
 .delete-button {
